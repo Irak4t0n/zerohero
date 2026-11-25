@@ -25,8 +25,8 @@ cat > "$ROOT/DEBIAN/control" <<EOF
 Package: $PKG
 Version: $VERSION
 Architecture: all
-Maintainer: Irak4t0n <https://github.com/Irak4t0n>
-Depends: python3, python3-pil, fonts-dejavu-core, sudo
+Maintainer: Irak4t0n <Irak4t0n@users.noreply.github.com>
+Depends: python3, python3-pil, fonts-dejavu-core, sudo, curl
 Section: utils
 Priority: optional
 Homepage: https://github.com/Irak4t0n/zerohero

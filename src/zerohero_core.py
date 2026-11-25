@@ -58,10 +58,30 @@ def installed_apps():
     return out
 
 
+def _fetch_registry():
+    """Download the registry. curl copes better than urllib with slow Wi-Fi
+    on this device, so use it when present and fall back to urllib."""
+    last = None
+    for attempt in range(3):
+        try:
+            if os.path.exists("/usr/bin/curl"):
+                r = subprocess.run(["curl", "-fsSL", "--retry", "2", "--connect-timeout", "20",
+                                    "-m", "180", "-A", "zerohero/" + VERSION, REGISTRY],
+                                   capture_output=True, timeout=200)
+                if r.returncode == 0:
+                    return json.loads(r.stdout)
+                last = RuntimeError("curl exit %d" % r.returncode)
+            else:
+                req = urllib.request.Request(REGISTRY, headers={"User-Agent": "zerohero/" + VERSION})
+                with urllib.request.urlopen(req, timeout=180) as resp:
+                    return json.load(resp)
+        except Exception as e:  # network hiccup: try again
+            last = e
+    raise last or RuntimeError("registry download failed")
+
+
 def registry_apps():
-    req = urllib.request.Request(REGISTRY, headers={"User-Agent": "zerohero/" + VERSION})
-    with urllib.request.urlopen(req, timeout=90) as r:
-        reg = json.load(r)
+    reg = _fetch_registry()
     return [a for a in reg.get("apps", []) if isinstance(a, dict)]
 
 
