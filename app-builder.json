@@ -28,7 +28,6 @@
       "additional_hardware": false,
       "background_service": false,
       "external_display": false
-    },
-    "locales": ["en"]
+    }
   }
 }
