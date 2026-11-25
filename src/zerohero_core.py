@@ -85,6 +85,14 @@ def registry_apps():
     return [a for a in reg.get("apps", []) if isinstance(a, dict)]
 
 
+def sync_catalog():
+    """Refresh the Store's own catalog cache so prepare fetches the new versions."""
+    try:
+        subprocess.run([STORE_BIN, "--sync"], capture_output=True, text=True, timeout=300)
+    except subprocess.TimeoutExpired:
+        pass
+
+
 def store_busy():
     """True if the Store has an unfinished transaction it still needs to reconcile."""
     return os.path.exists(PENDING)
@@ -158,6 +166,11 @@ def upgrade_one(u, note=lambda msg: None):
     if r.returncode != 0 or not job:
         return "prepare: " + (_last_line(r.stdout + r.stderr) or "failed")
     tx = job[4] if len(job) > 4 else ""
+    # Guard against a stale Store catalog handing back the version already installed.
+    want = "_%s_" % str(u.new).split(":")[-1]
+    if want not in os.path.basename(job[1] if len(job) > 1 else ""):
+        repair_pending()
+        return "Store catalog is behind the registry; try again shortly"
     # The helper runs as root: verifies the .deb, resolves dependencies,
     # installs it and records completion in the pending transaction.
     proc = subprocess.Popen(helper_argv(job), stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
@@ -184,6 +197,7 @@ def upgrade_one(u, note=lambda msg: None):
 
 def run_updates(ups, on_change=lambda u: None):
     """Upgrade each item in order, reporting status changes. Returns failures."""
+    sync_catalog()
     failed = []
     for u in ups:
         u.status = "working"
