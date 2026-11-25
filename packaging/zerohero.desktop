@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=0Hero
+Comment=Update every installed store app in one tap
+Exec=/usr/bin/python3 /usr/share/APPLaunch/apps/zerohero/app.py
+Icon=share/images/zerohero.png
+Terminal=false
+Categories=Settings;
+StartupNotify=false

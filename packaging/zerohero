@@ -1,0 +1,3 @@
+#!/bin/sh
+# 0Hero command line: `zerohero` lists updates, `zerohero --apply` installs them.
+exec /usr/bin/python3 /usr/share/APPLaunch/apps/zerohero/zerohero_core.py "$@"
