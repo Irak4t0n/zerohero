@@ -6,6 +6,7 @@
   "description": "0Hero checks every app you installed from the CardputerZero App Store against the official registry and installs all available updates in one tap, using the Store's own verified download, install and finalize steps. Apps you install later show up automatically. Press Enter to update everything, R to check again, Esc to exit. Also includes a `zerohero` command (`zerohero --apply`) for SSH. Needs Wi-Fi and the default passwordless sudo.",
   "store": {
     "summary": "Update every installed store app in one tap",
+    "description": "0Hero checks every app you installed from the CardputerZero App Store against the official registry and installs all available updates in one tap. It uses the Store's own verified prepare, install and finalize steps, so the Store's records stay correct. Apps you install later show up automatically. Enter updates everything, R checks again, Esc exits (locked while an install runs). If one app fails, the rest still update. Also includes a zerohero command for SSH: zerohero lists updates, zerohero --apply installs them. Needs Wi-Fi and the default passwordless sudo.",
     "categories": ["System Tools"],
     "screenshots": [
       "assets/screenshots/list.png",
